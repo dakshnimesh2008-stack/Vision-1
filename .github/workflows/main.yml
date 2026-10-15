@@ -26,10 +26,12 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Extract VISION project
+      - name: Extract fixed VISION project
         run: |
-          unzip -q VISION_Android_Project_Stage5_Final.zip -d source
+          test -f VISION_Android_Project_Stage5_Fixed.zip
+          unzip -q VISION_Android_Project_Stage5_Fixed.zip -d source
           test -f source/VISION/settings.gradle.kts
+          test -f source/VISION/app/src/main/java/com/daksh/vision/ui/screens/AodRulesUi.kt
 
       - name: Run unit tests
         working-directory: source/VISION
@@ -40,6 +42,7 @@ jobs:
         run: gradle assembleDebug
 
       - name: Upload APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: VISION-debug-apk
