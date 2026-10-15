@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -26,11 +26,16 @@ jobs:
         with:
           gradle-version: '8.7'
 
+      - name: Verify ZIP
+        run: |
+          test -f VISION_Android_Project_Stage5_Fixed.zip
+          unzip -t VISION_Android_Project_Stage5_Fixed.zip
+
       - name: Extract VISION project
         run: |
-          test -f VISION_Android_Project_Stage5_Fixed-1.zip
-          unzip -q VISION_Android_Project_Stage5_Fixed-1.zip -d source
+          unzip -q VISION_Android_Project_Stage5_Fixed.zip -d source
           test -f source/VISION/settings.gradle.kts
+          test -f source/VISION/app/build.gradle.kts
 
       - name: Run unit tests
         working-directory: source/VISION
